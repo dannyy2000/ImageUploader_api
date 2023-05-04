@@ -2,6 +2,7 @@ package com.example.uploader.services.Implementation;
 
 import com.example.uploader.cloud.CloudService;
 import com.example.uploader.data.dtos.request.UploadImageRequest;
+import com.example.uploader.data.dtos.response.DeleteImageResponse;
 import com.example.uploader.data.dtos.response.SearchImageResponse;
 import com.example.uploader.data.dtos.response.UploadImageResponse;
 import com.example.uploader.data.models.Image;
@@ -23,11 +24,14 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public UploadImageResponse uploadImage(UploadImageRequest imageRequest) {
-        var imageUrl = cloudService.upload(imageRequest.getImage(),imageRequest.getImageName());
+
+        var imageUrl = cloudService.upload(imageRequest.getImage(), imageRequest.getImageName());
         Image image = new Image();
         image.setImage(imageUrl);
         image.setImageName(imageRequest.getImageName());
-
+        if (imageRepository.existsImageByImageName(imageRequest.getImageName())) {
+            throw new BusinessLogicException("Image name with this name already exists");
+        }
         Image savedImage = imageRepository.save(image);
 
         UploadImageResponse imageResponse = new UploadImageResponse();
@@ -52,6 +56,18 @@ public class ImageServiceImpl implements ImageService {
         throw new BusinessLogicException("Image with name " + imageName + " does not exist");
     }
 
-
+    @Override
+    public DeleteImageResponse deleteImageByName(String imageName) {
+        Optional<Image> findImage = imageRepository.findByImageName(imageName);
+        if (findImage.isPresent()) {
+            Image image = findImage.get();
+            String imageUrl = image.getImage();
+            imageRepository.deleteImageByImageName(imageUrl);
+            DeleteImageResponse deleteImageResponse = new DeleteImageResponse();
+            deleteImageResponse.setMessage("Deleted successfully");
+            return deleteImageResponse;
+        }
+        throw new BusinessLogicException("Image with name " + imageName + " does not exist");
+    }
 
 }
