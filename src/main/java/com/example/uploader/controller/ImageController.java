@@ -27,24 +27,16 @@ public class ImageController {
 
     @GetMapping("{imageName}")
     public ResponseEntity<?>search(@PathVariable String imageName){
-        try{
            SearchImageResponse searchImageResponse = imageService.searchImageByName(imageName);
            return new ResponseEntity<>(searchImageResponse,HttpStatus.FOUND);
         }
-        catch (BusinessLogicException exception){
-            return ResponseEntity.badRequest().body(exception.getMessage());
-        }
-    }
 
     @DeleteMapping("{imageName}")
     public ResponseEntity<?>delete(@PathVariable String imageName){
-        try{
             DeleteImageResponse deleteImageResponse = imageService.deleteImageByName(imageName);
             return new ResponseEntity<>(deleteImageResponse,HttpStatus.OK);
         }
-        catch (BusinessLogicException exception){
-            return ResponseEntity.badRequest().body(exception.getMessage());
-        }
+
     }
 
-}
+

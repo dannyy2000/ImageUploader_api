@@ -10,12 +10,14 @@ import com.example.uploader.data.repository.ImageRepository;
 import com.example.uploader.exception.BusinessLogicException;
 import com.example.uploader.services.ImageService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class ImageServiceImpl implements ImageService {
 
     private final CloudService cloudService;
@@ -24,6 +26,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public UploadImageResponse uploadImage(UploadImageRequest imageRequest) {
+        log.info("Request to upload an image with payload={}",imageRequest);
 
         var imageUrl = cloudService.upload(imageRequest.getImage(), imageRequest.getImageName());
         Image image = new Image();
@@ -43,6 +46,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     public SearchImageResponse searchImageByName(String imageName) {
+        log.info("Request to search for an image with payload={}",imageName);
         Optional<Image> findImage = imageRepository.findByImageName(imageName);
         if (findImage.isPresent()) {
             Image image = findImage.get();
@@ -58,6 +62,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public DeleteImageResponse deleteImageByName(String imageName) {
+        log.info("Request to delete an image with payload={}",imageName);
         Optional<Image> findImage = imageRepository.findByImageName(imageName);
         if (findImage.isPresent()) {
             Image image = findImage.get();

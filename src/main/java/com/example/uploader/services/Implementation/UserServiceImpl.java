@@ -7,12 +7,14 @@ import com.example.uploader.data.models.User;
 import com.example.uploader.data.repository.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import com.example.uploader.services.UserService;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 
 public class UserServiceImpl implements UserService {
 
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse createUser(UserRequest userRequest) {
+        log.info("Request to create a user with payload={}",userRequest);
         User appUser = mapper.map(userRequest,User.class);
        User savedUser = userRepository.save(appUser);
        UserResponse userResponse = getUserResponse(savedUser);
