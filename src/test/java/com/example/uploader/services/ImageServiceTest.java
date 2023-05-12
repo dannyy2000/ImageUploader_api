@@ -1,6 +1,7 @@
 package com.example.uploader.services;
 
 import com.example.uploader.data.dtos.request.UploadImageRequest;
+import com.example.uploader.data.dtos.response.DeleteImageResponse;
 import com.example.uploader.data.dtos.response.SearchImageResponse;
 import com.example.uploader.data.dtos.response.UploadImageResponse;
 import com.example.uploader.data.models.Image;
@@ -40,35 +41,16 @@ class ImageServiceTest {
     @Test
     void uploadImageTest() throws IOException {
         MockMultipartFile file =
-                new MockMultipartFile("Fineboy",
-                new FileInputStream("C:\\Users\\user\\Documents\\fineboy.jpg"));
+                new MockMultipartFile("patient",
+                new FileInputStream("C:\\Users\\user\\Documents\\patient.jpg"));
          imageRequest.setImage(file);
-        imageRequest.setImageName("Fineboy");
+        imageRequest.setImageName("patient");
         UploadImageResponse uploadImageResponse = imageService.uploadImage(imageRequest);
         assertThat(uploadImageResponse).isNotNull();
 
-//    String imageName = "fineboy";
-//    var cloudinaryUrl = cloudService.upload(file,imageName);
-//    assertThat(cloudinaryUrl).isNotNull();
 
 }
 
-//@Test
-//    void searchImageByImageNameTest() throws IOException {
-//    MockMultipartFile file =
-//            new MockMultipartFile("fineboy",
-//                    new FileInputStream("C:\\Users\\user\\Documents\\fineboy.jpg"));
-//    imageRequest.setImage(file);
-//    imageRequest.setImageName("Fineboy");
-//    UploadImageResponse uploadImageResponse = imageService.uploadImage(imageRequest);
-//
-//
-//    String imageName = "Fineboy";
-//
-//    Image image = imageService.searchImageByName(imageName);
-////    assertThat(searchImageResponse.getImage()).isNotNull();
-//    assertEquals(imageName,image.getImageName());
-////    System.out.println(searchImageResponse.toString());
 
     @Test
     public void testSearchImageByName() {
@@ -79,7 +61,16 @@ class ImageServiceTest {
         SearchImageResponse imageResponse = imageService.searchImageByName(imageName);
         assertNotNull(imageResponse);
         assertEquals(imageName, imageResponse.getImageName());
-//        assertEquals(image.getImage(), result.getImage());
+    }
+
+    @Test
+    public void deleteImageByName(){
+       String imageName = "patient";
+       Image image = new Image();
+       image.setImage("C:\\Users\\user\\Documents\\patient.jpg");
+       image.setImageName(imageName);
+        DeleteImageResponse deleteImageResponse = imageService.deleteImageByName(imageName);
+        assertNull(deleteImageResponse.getId());
     }
 
 

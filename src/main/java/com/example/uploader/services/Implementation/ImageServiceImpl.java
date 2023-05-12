@@ -61,18 +61,18 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public DeleteImageResponse deleteImageByName(String imageName) {
-        log.info("Request to delete an image with payload={}",imageName);
-        Optional<Image> findImage = imageRepository.findByImageName(imageName);
+    public DeleteImageResponse deleteImageByName(String imageNamee) {
+        log.info("Request to delete an image with payload={}",imageNamee);
+        Optional<Image> findImage = imageRepository.findByImageName(imageNamee);
         if (findImage.isPresent()) {
             Image image = findImage.get();
-            String imageUrl = image.getImage();
-            imageRepository.deleteImageByImageName(imageUrl);
+            var imageName = image.getImage();
+            imageRepository.deleteByImageName(imageName);
             DeleteImageResponse deleteImageResponse = new DeleteImageResponse();
             deleteImageResponse.setMessage("Deleted successfully");
             return deleteImageResponse;
         }
-        throw new BusinessLogicException("Image with name " + imageName + " does not exist");
+        throw new BusinessLogicException("Image with name " + imageNamee + " does not exist");
     }
 
 }

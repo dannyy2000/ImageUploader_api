@@ -18,6 +18,6 @@ public class ImageCategory {
 @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String categoryName;
-@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+@OneToMany(fetch = FetchType.EAGER)
     private Set<Image> images;
 }

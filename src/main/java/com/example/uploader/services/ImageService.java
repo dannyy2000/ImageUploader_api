@@ -12,6 +12,6 @@ public interface ImageService {
 
   SearchImageResponse searchImageByName(String imageName);
 
-  DeleteImageResponse deleteImageByName(String imageName);
+  DeleteImageResponse deleteImageByName(String imageNamee);
 
 }
