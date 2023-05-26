@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService {
        return userResponse;
     }
 
+    @Override
+    public User getUserByUserName(String userName) {
+        return userRepository.findByUsername(userName);
+    }
+
     private UserResponse getUserResponse(User savedUser ) {
 
         UserResponse userResponse = new UserResponse();
