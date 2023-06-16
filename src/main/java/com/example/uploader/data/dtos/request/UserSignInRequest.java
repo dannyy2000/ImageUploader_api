@@ -9,14 +9,12 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class UserRequest {
-    @NotNull(message = "field name cannot be null")
-    @NotEmpty(message = "field name cannot be empty")
-    private String username;
+public class UserSignInRequest {
     @NotNull(message = "field name cannot be null")
     @NotEmpty(message = "field name cannot be empty")
     private String email;
     @NotNull(message = "field name cannot be null")
     @NotEmpty(message = "field name cannot be empty")
     private String password;
+
 }

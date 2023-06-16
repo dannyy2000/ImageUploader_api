@@ -1,4 +1,4 @@
-package com.example.uploader.security;
+package com.example.uploader.security.services;
 
 import com.example.uploader.data.models.User;
 import io.jsonwebtoken.Claims;
@@ -41,6 +41,11 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSigningKey(),SignatureAlgorithm.HS256).compact();
+    }
+
+    public Boolean validateToken(String token, UserDetails user){
+        final String email = extractUserEmail(token);
+        return email.equals(user.getUsername()) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token){

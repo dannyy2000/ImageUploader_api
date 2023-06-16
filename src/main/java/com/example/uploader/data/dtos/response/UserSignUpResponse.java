@@ -7,11 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResponse {
+public class UserSignUpResponse {
 
     private Long id;
     private String message;
     private boolean isSuccessful;
-
 
 }

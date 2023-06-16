@@ -1,7 +1,7 @@
 package com.example.uploader.services;
 
-import com.example.uploader.data.dtos.request.UserRequest;
-import com.example.uploader.data.dtos.response.UserResponse;
+import com.example.uploader.data.dtos.request.UserSignUpRequest;
+import com.example.uploader.data.dtos.response.UserSignUpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,20 +12,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserServiceTest {
 
     @Autowired
-    private UserService userService;
+    private AppUserService userService;
 
-    private UserRequest userRequest;
+    private UserSignUpRequest userRequest;
 
     @BeforeEach
      void setUp(){
-        userRequest = new UserRequest();
+        userRequest = new UserSignUpRequest();
         userRequest.setEmail("Danny30@gmail.com");
-        userRequest.setUsername("Danny30");
     }
 
     @Test
     void createUser(){
-        UserResponse userResponse = userService.createUser(userRequest);
+        UserSignUpResponse userResponse = userService.registerUser(userRequest);
         assertThat(userResponse).isNotNull();
     }
 
