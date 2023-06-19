@@ -42,12 +42,16 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public UserSignInResponse loginUser(UserSignInRequest userSignInRequest) {
+        log.info("Request to sign in  a user with payload={}",userSignInRequest);
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userSignInRequest.getEmail(),userSignInRequest.getPassword()));
                 User user = userRepository.findByEmail(userSignInRequest.getEmail());
                 if(user == null)throw new BusinessLogicException("Invalid email or password");
                 var jwt = jwtService.generateToken(user);
-                return UserSignInResponse.builder().accessToken(jwt).build();
+                return UserSignInResponse.builder()
+                        .userId(user.getId())
+                        .accessToken(jwt)
+                        .build();
     }
 
 

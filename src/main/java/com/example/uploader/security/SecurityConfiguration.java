@@ -1,4 +1,5 @@
 package com.example.uploader.security;
+import com.example.uploader.data.repository.UserRepository;
 import com.example.uploader.security.services.UserService;
 import com.example.uploader.security.services.UserServiceImpl;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,11 +30,13 @@ public class SecurityConfiguration {
     private final UserService userService;
     private final JwtAuthFilter jwtAuthFilter;
 
+    private final UserRepository userRepository;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/user/**")
+                        .requestMatchers("/api/v1/user/signIn","/api/v1/user/signUp")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -38,17 +44,17 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-         return httpSecurity.build();
+        return httpSecurity.build();
 
     }
 
 
-   @Bean
+    @Bean
     public AuthenticationProvider authenticationProvider() {
-       DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-       authenticationProvider.setUserDetailsService(userService.userDetailsService());
-       authenticationProvider.setPasswordEncoder(passwordEncoder());
-       return authenticationProvider;
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userService.userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
     }
 
     @Bean
@@ -61,5 +67,16 @@ public class SecurityConfiguration {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                return userRepository.findByEmail(username);
+            }
+        };
 
+    }
 }
+
+
