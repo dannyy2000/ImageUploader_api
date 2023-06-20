@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +22,8 @@ public class User implements UserDetails {
     private String lastName;
     private String email;
     private String password;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Image> images;
 
 
     @Override

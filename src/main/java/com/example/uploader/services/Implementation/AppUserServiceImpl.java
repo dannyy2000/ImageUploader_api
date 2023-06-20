@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.uploader.services.AppUserService;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -29,12 +31,15 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public UserSignUpResponse registerUser(UserSignUpRequest userRequest) {
         log.info("Request to create a user with payload={}",userRequest);
+        Optional<User> userFound = userRepository.findUserByEmail(userRequest.getEmail());
+        if(userFound.isPresent()) throw new BusinessLogicException("User already exists");
         User appUser = User.builder()
                         .firstName(userRequest.getFirstName())
                         .lastName(userRequest.getLastName())
                         .email(userRequest.getEmail())
                         .password(passwordEncoder.encode(userRequest.getPassword()))
                         .build();
+
        User savedUser = userRepository.save(appUser);
        UserSignUpResponse userResponse = getUserResponse(savedUser);
        return userResponse;
